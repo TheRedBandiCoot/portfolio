@@ -1,0 +1,20 @@
+[
+  {
+    "id": "454545",
+    "projectName": "Project One",
+    "projectLink": "https://www.google.com/",
+    "projectDesc": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi dolorem eum cum quisquam! Natus distinctio voluptatum aut enim. Unde sunt ab esse minus vel quam nesciunt. Vitae esse voluptates corporis!"
+  },
+  {
+    "id": "878484",
+    "projectName": "Project Two",
+    "projectLink": "https://ui.shadcn.com/",
+    "projectDesc": "Some random description for this Project Two."
+  },
+  {
+    "id": "979154",
+    "projectName": "Project Three",
+    "projectLink": "https://jsonplaceholder.typicode.com/",
+    "projectDesc": "Some random description."
+  }
+]
