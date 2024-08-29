@@ -1,10 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export default function Typewriter() {
-  const texts = ['Fullstack Developer', 'Web Developer', 'Designer', 'Freelancer'];
-  const [currentText, setCurrentText] = useState('');
+  const texts = [
+    "Fullstack Developer",
+    "Web Developer",
+    "Designer",
+    "Freelancer",
+  ];
+  const [currentText, setCurrentText] = useState("");
   const [index, setIndex] = useState(0);
   const [textIndex, setTextIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
@@ -28,22 +33,22 @@ export default function Typewriter() {
       typingSpeed = 500;
       setTimeout(() => {
         setDeleting(false);
-        setTextIndex(prev => (prev + 1) % texts.length);
+        setTextIndex((prev) => (prev + 1) % texts.length);
         setIsPaused(false);
       }, typingSpeed);
       return;
     }
     const timeoutId = setTimeout(() => {
       setCurrentText(fullText.substring(0, deleting ? index - 1 : index + 1));
-      setIndex(prev => prev + (deleting ? -1 : 1));
+      setIndex((prev) => prev + (deleting ? -1 : 1));
     }, typingSpeed);
 
     return () => clearTimeout(timeoutId);
-  }, [index, deleting, textIndex, isPaused]);
+  }, [index, deleting, textIndex, isPaused, texts]);
 
   return (
-    <div className='typewriter'>
-      <h1 className={'sm:text-xl text-base'}>{currentText}</h1>
+    <div className="typewriter">
+      <h1 className={"text-base sm:text-xl"}>{currentText}</h1>
     </div>
   );
 }
