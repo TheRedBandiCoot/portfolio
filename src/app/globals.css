@@ -156,3 +156,37 @@ body {
 nav {
   box-shadow: 0 0 15px 2px rgba(241, 221, 2, 0.25);
 }
+
+.editable-div .badge {
+  display: inline-flex;
+  align-items: flex-start;
+  background-color: #ececec;
+  border-radius: 12px;
+  padding: 0 8px;
+  margin: 0 2px;
+  font-size: 12px;
+}
+
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: red;
+  }
+  .scrollbar::-webkit-scrollbar-corner {
+    display: none;
+  }
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #161938;
+    border-radius: 100vh;
+    border: 3px solid #161938;
+  }
+}

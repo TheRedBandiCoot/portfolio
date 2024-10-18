@@ -8,11 +8,42 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Image as Img } from "lucide-react";
-import Image from "next/image";
-import data from "./data.json";
-import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
+import { Edit, Image as Img } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import data from "./data.json";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { useMediaQuery } from "usehooks-ts";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+const isAdmin = true;
 
 const constructData = (chuckSize: number = 3) => {
   const arr = [];
@@ -57,7 +88,7 @@ const constructData = (chuckSize: number = 3) => {
 //             <CarouselItem key={i} className="flexify">
 //               <div className="grid w-full grid-cols-1 place-items-center sm-md:grid-cols-2 lg-xl:grid-cols-3">
 //                 {p.map((k, i) => (
-//                   <Card key={i} title={k.projectName} windowSize={windowSize} />
+//                   <CardBox key={i} title={k.projectName} windowSize={windowSize} />
 //                 ))}
 //               </div>
 //             </CarouselItem>
@@ -84,7 +115,13 @@ export default function ProjectPage() {
     };
   }, []);
 
-  if (!windowSize) return null;
+  const LoadingSpinner = () => (
+    <div className="flex h-screen items-center justify-center">
+      <div className="h-32 w-32 animate-spin rounded-full border-b-4 border-t-4 border-gray-900"></div>
+    </div>
+  );
+
+  if (!windowSize) return <LoadingSpinner />;
 
   const orientation = windowSize[0] < 520 ? "horizontal" : "vertical";
 
@@ -95,6 +132,7 @@ export default function ProjectPage() {
         className="mx-4 mt-10 w-[78%] sm-md:w-full lg:mt-20"
         orientation={orientation}
         opts={{ align: "start" }}
+        plugins={[WheelGesturesPlugin()]}
       >
         <CarouselContent className="h-[22rem]">
           {constructData(
@@ -103,7 +141,7 @@ export default function ProjectPage() {
             <CarouselItem key={i} className="flexify">
               <div className="grid w-full grid-cols-1 place-items-center sm-md:grid-cols-2 lg-xl:grid-cols-3">
                 {p.map((k, i) => (
-                  <Card
+                  <CardBox
                     key={i}
                     title={k.projectName}
                     desc={k.projectDesc}
@@ -121,7 +159,7 @@ export default function ProjectPage() {
   );
 }
 
-function Card({
+function CardBox({
   imgSrc,
   title,
   windowSize,
@@ -132,6 +170,9 @@ function Card({
   desc?: string;
   windowSize: number[];
 }) {
+  const [open, setOpen] = useState<boolean>(false);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
   return (
     // windowSize[0] <= 1024 ? 'h-[19rem]' : 'h-[20rem] h-[22vw]'
     <div
@@ -165,21 +206,73 @@ function Card({
         </div>
       </article>
       {/* lg:ml-4  */}
-      <div className="my-2 flex gap-x-2 self-start sm-md:gap-x-0 lg:my-4 xl:gap-x-4">
-        <Button
-          variant={"outline"}
-          size={windowSize[0] <= 1024 ? "sm" : "default"}
-          className="-ml-2 scale-90 bg-slate-200 dark:bg-slate-600 dark:text-slate-300 sm-md:scale-[.80] sm:scale-[.85] md:ml-0 md:scale-90 xl:scale-100"
-        >
-          Github
-        </Button>
-        <Button
-          variant={"outline"}
-          size={windowSize[0] <= 1024 ? "sm" : "default"}
-          className="-ml-2 scale-90 bg-slate-200 dark:bg-slate-600 dark:text-slate-300 sm-md:scale-[.80] sm:scale-[.85] md:ml-0 md:scale-90 xl:scale-100"
-        >
-          Live Demo
-        </Button>
+      {/* <div className="flex w-full items-center self-start border-[1px] border-red-600"> */}
+      <div className="flex w-full items-center self-start">
+        <div className="my-2 flex flex-1 gap-x-2 sm-md:gap-x-0 lg:my-4 xl:gap-x-4">
+          <Button
+            variant={"outline"}
+            size={windowSize[0] <= 1024 ? "sm" : "default"}
+            className="-ml-2 scale-90 bg-slate-200 transition-all duration-300 dark:bg-slate-700 dark:text-slate-300 hover:dark:bg-slate-600 sm-md:scale-[.80] sm:scale-[.85] md:ml-0 md:scale-90 xl:scale-100"
+          >
+            Github
+          </Button>
+          <Button
+            variant={"outline"}
+            size={windowSize[0] <= 1024 ? "sm" : "default"}
+            className="-ml-2 scale-90 bg-slate-200 transition-all duration-300 dark:bg-slate-700 dark:text-slate-300 hover:dark:bg-slate-600 sm-md:scale-[.80] sm:scale-[.85] md:ml-0 md:scale-90 xl:scale-100"
+          >
+            Live Demo
+          </Button>
+        </div>
+
+        {isDesktop ? (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-transparent p-2 hover:bg-transparent">
+                <Edit className="text-white transition-all duration-300 hover:text-slate-400" />
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent
+              className="sm:max-w-[425px]"
+              onCloseAutoFocus={() => console.log("close")}
+            >
+              <DialogHeader>
+                <DialogTitle>Edit profile</DialogTitle>
+                <DialogDescription>
+                  Make changes to your profile here. Click save when you're
+                  done.
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        ) : (
+          <Drawer open={open} onOpenChange={setOpen}>
+            <DrawerTrigger asChild>
+              <Button className="bg-transparent p-2 hover:bg-transparent">
+                <Edit className="text-white transition-all duration-300 hover:text-slate-400" />
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="h-full max-h-[90%]">
+              {/* Header */}
+              <DrawerHeader>
+                <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                <DrawerDescription>
+                  This action cannot be undone.
+                </DrawerDescription>
+              </DrawerHeader>
+              {/* Main */}
+              <div className="px-8"></div>
+              {/* Footer */}
+              <DrawerFooter>
+                <Button>Submit</Button>
+                <DrawerClose>
+                  <Button variant="outline">Cancel</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        )}
       </div>
     </div>
   );
